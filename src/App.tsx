@@ -22,10 +22,9 @@ import {
   SiPostgresql,
   SiRailway
 } from 'react-icons/si';
-import { FaAws } from "react-icons/fa6";
+import { FaAws } from 'react-icons/fa6';
 
-
-import submitForm from "./functions/submitForm";
+import submitForm from './functions/submitForm';
 
 function App() {
   const [darkMode, setDarkMode] = useState(true);
@@ -80,8 +79,6 @@ function App() {
       name: 'AWS',
       icon: <FaAws className="text-4xl text-blue-600 dark:text-blue-400" />
     }
-
-
   ];
 
   const projects = [
@@ -89,14 +86,14 @@ function App() {
       title: 'Arococo',
       description: 'Build and maintain a website for a successful interior design.',
       image: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=800&auto=format&fit=crop&q=60',
-      link: 'https://a-rococo.com/',
+      link: 'https://a-rococo.com/'
     },
     {
       title: 'ChaTrip',
       description: 'Developing an AI tourist guide application.',
       image: 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800&auto=format&fit=crop&q=60',
-      link: 'https://chatrip-frontend-production.up.railway.app/login',
-    },
+      link: 'https://chatrip-frontend-production.up.railway.app/login'
+    }
   ];
 
   const [formData, setFormData] = useState({
@@ -126,8 +123,9 @@ function App() {
 
   return (
     <div
-      className={`min-h-screen transition-colors duration-200 ${darkMode ? 'dark:bg-gray-900 dark:text-white' : 'bg-white'
-        }`}
+      className={`min-h-screen transition-colors duration-200 ${
+        darkMode ? 'dark:bg-gray-900 dark:text-white' : 'bg-white'
+      }`}
     >
       {/* Header */}
       <header className="fixed w-full top-0 z-50 bg-white dark:bg-gray-900 shadow-md">
@@ -315,9 +313,6 @@ function App() {
                   <h3 className="mt-4 text-xl font-semibold text-gray-800 dark:text-gray-100">
                     {skill.name}
                   </h3>
-                  {/* <p className="text-sm mt-2 text-gray-500 dark:text-gray-400">
-                    {skill.description}
-                  </p> */}
                 </div>
               ))}
             </div>
@@ -368,10 +363,11 @@ function App() {
               <form onSubmit={handleSubmit} className="space-y-6">
                 {status.message && (
                   <div
-                    className={`p-4 rounded-lg ${status.type === 'success'
-                      ? 'bg-green-100 text-green-800'
-                      : 'bg-red-100 text-red-800'
-                      } flex items-center gap-2`}
+                    className={`p-4 rounded-lg ${
+                      status.type === 'success'
+                        ? 'bg-green-100 text-green-800'
+                        : 'bg-red-100 text-red-800'
+                    } flex items-center gap-2`}
                   >
                     {status.type === 'success' ? (
                       <CheckCircle className="w-5 h-5" />
