@@ -1,9 +1,10 @@
 import axios from 'axios'
 
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:4000";
 export default async function submitForm(formData, setStatus, setFormData, setIsSubmitting) {
   try {
     // The second argument is the request body; the third is config (headers, etc.)
-    const response = await axios.post('http://localhost:4000/api/email/send-and-save', formData, {
+    const response = await axios.post(`${VITE_API_URL}/api/email/send-and-save`, formData, {
       headers: {
         'Content-Type': 'application/json'
       }
