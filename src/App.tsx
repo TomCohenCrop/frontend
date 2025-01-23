@@ -117,7 +117,36 @@ function App() {
     setIsSubmitting(true);
     setStatus({ type: '', message: '' });
 
-    // Call the submitForm function, passing all necessary arguments
+    // Basic validation
+    const errors = {};
+
+    // Name must not be empty
+    if (!formData.name.trim()) {
+      errors.name = 'Name is required';
+    }
+
+    // Email must not be empty and match a valid pattern
+    if (!formData.email.trim()) {
+      errors.email = 'Email is required';
+    } else if (
+      !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(formData.email)
+    ) {
+      errors.email = 'Invalid email address';
+    }
+
+    // Message must not be empty
+    if (!formData.message.trim()) {
+      errors.message = 'Message is required';
+    }
+
+    // If there are any errors, show a general error message and stop
+    if (Object.keys(errors).length > 0) {
+      setStatus({ type: 'error', message: 'Please fix the errors' });
+      setIsSubmitting(false);
+      return;
+    }
+
+    // If all validations pass, call the submitForm
     await submitForm(formData, setStatus, setFormData, setIsSubmitting);
   };
 
@@ -272,7 +301,7 @@ function App() {
               <div className="relative">
                 <div className="w-80 h-80 mx-auto overflow-hidden rounded-full border-4 border-blue-600 dark:border-blue-400">
                   <img
-                    src="/src/images/eyal.JPG"
+                    src="/images/eyal.JPG"
                     alt="Profile"
                     className="w-full h-full object-cover"
                   />
@@ -361,6 +390,7 @@ function App() {
             <h2 className="text-3xl font-bold text-center mb-12">Contact Me</h2>
             <div className="max-w-2xl mx-auto">
               <form onSubmit={handleSubmit} className="space-y-6">
+                {/* Display status message (success or error) */}
                 {status.message && (
                   <div
                     className={`p-4 rounded-lg ${
@@ -378,6 +408,7 @@ function App() {
                   </div>
                 )}
 
+                {/* Name */}
                 <div>
                   <input
                     type="text"
@@ -389,6 +420,8 @@ function App() {
                     required
                   />
                 </div>
+
+                {/* Email */}
                 <div>
                   <input
                     type="email"
@@ -400,6 +433,8 @@ function App() {
                     required
                   />
                 </div>
+
+                {/* Message */}
                 <div>
                   <textarea
                     name="message"
@@ -411,6 +446,8 @@ function App() {
                     required
                   ></textarea>
                 </div>
+
+                {/* Submit Button */}
                 <button
                   type="submit"
                   disabled={isSubmitting}
@@ -420,6 +457,7 @@ function App() {
                 </button>
               </form>
 
+              {/* Calendly Booking */}
               <div className="mt-12 text-center">
                 <h3 className="text-xl font-semibold mb-4">Schedule a Meeting</h3>
                 <a
