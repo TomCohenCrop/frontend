@@ -10,9 +10,8 @@ import {
   CheckCircle,
   AlertCircle
 } from 'lucide-react';
-import VideoPlayer from "./VideoPlayer";
+import ReactPlayer from 'react-player';
 import { SiAdobephotoshop } from "react-icons/si";
-
 import {
   SiFigma,
   SiAdobe,
@@ -22,15 +21,14 @@ import {
   SiAdobeaftereffects
 } from 'react-icons/si';
 
-
 import submitForm from './functions/submitForm';
 
 function App() {
   const [darkMode, setDarkMode] = useState(true);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  // Add state for the currently selected video
-  const [selectedVideo, setSelectedVideo] = useState(null);
+  const [selectedVideo, setSelectedVideo] = useState(null); // which video is playing (inline)
 
+  // Apply dark mode classes
   useEffect(() => {
     if (darkMode) {
       document.documentElement.classList.add('dark');
@@ -39,8 +37,7 @@ function App() {
     }
   }, [darkMode]);
 
-
-
+  // Skills data
   const skills = [
     {
       name: 'After effects',
@@ -70,44 +67,59 @@ function App() {
       name: 'Cinema 4D',
       icon: <SiCinema4D className="text-4xl text-blue-600 dark:text-blue-400" />
     },
-    // {
-    //   name: 'midjourney',
-    //   icon: <SiPostgresql className="text-4xl text-blue-600 dark:text-blue-400" />
-    // },
-    // {
-    //   name: 'Runway',
-    //   icon: <SiRailway className="text-4xl text-blue-600 dark:text-blue-400" />
-    // },
-    // {
-    //   name: 'King',
-    //   icon: <FaAws className="text-4xl text-blue-600 dark:text-blue-400" />
-    // },
-    // {
-    //   name: 'Luka dream machine',
-    //   icon: <FaAws className="text-4xl text-blue-600 dark:text-blue-400" />
-    // }
   ];
 
+  // Projects data
   const projects = [
     {
-      title: "Project 1",
-      description: "This is my first project",
-      videoUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+      title: "כאן 11",
+      description: "לילה כיום יאיר",
+      videoUrl: "https://youtu.be/VYox99w7LVM?si=rHi1RFCZesuldy9h"
     },
     {
-      title: "Project 2",
+      title: "Westarp israel done",
       description: "Another cool project",
-      videoUrl: "https://www.youtube.com/watch?v=3JZ_D3ELwOQ"
+      videoUrl: "https://youtu.be/ph214eLBvUQ?si=yB8z9Hn-TrAriUbR"
     },
     {
-      title: "Project 3",
+      title: "Keepy",
       description: "Another cool project",
-      videoUrl: "https://app.frame.io/reviews/64e512f0-4d19-42ef-8b01-663a8024f5c9/afe53f54-742d-4389-aa66-abb56a6b8732"
-    }
+      videoUrl: "https://youtu.be/BrqreihGFRo?si=h_zs5TK8E2ZQtMCd"
+    },
+    {
+      title: "Crop logo",
+      description: "Another cool project",
+      videoUrl: "https://youtu.be/gRW0k7iu-FU?si=szbD9qiIzOLvbLC9"
+    },
+    {
+      title: "Lynxight",
+      description: "Another cool project",
+      videoUrl: "https://youtu.be/MvBL6hb-la0?si=dpSq9UOyYtec2AKk"
+    },
+    {
+      title:"המפקדת",
+      description:"תיקון צבע",
+      videoUrl: "https://youtu.be/7_RikziXxeM?si=J54I9n5_B-_K--SA",
+    },
+    {
+      title: "Crop Showreel",
+      description:"",
+      videoUrl: "https://youtu.be/tQCOBKm2Wqg?si=btKOrlDyBErvyLhB",
+    },
+    {
+      title: "Nevvon",
+      description:"",
+      videoUrl: "https://youtu.be/wvL2oj-k6uw?si=FihYyamzGuuCTgO0",
+    },
+    {
+      title: "App Commercial",
+      description:"",
+      videoUrl: "https://youtu.be/eGMcEymauW8?si=aDrh6cZvjQe-2QSp",
+    },
   ];
 
-  // Inside your App component, after defining the projects array, add:
-  const itemsPerPage = 2; // Adjust as needed
+  // Pagination
+  const itemsPerPage = 4;
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = Math.ceil(projects.length / itemsPerPage);
 
@@ -115,12 +127,14 @@ function App() {
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentProjects = projects.slice(indexOfFirstItem, indexOfLastItem);
 
-  // Function to handle page changes
   const handlePageChange = (newPage) => {
     if (newPage < 1 || newPage > totalPages) return;
     setCurrentPage(newPage);
+    // Optionally reset selectedVideo when changing pages
+    setSelectedVideo(null);
   };
 
+  // Contact form states
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -168,9 +182,14 @@ function App() {
     await submitForm(formData, setStatus, setFormData, setIsSubmitting);
   };
 
+
+
   return (
-    <div dir='rtl'
-      className={`min-h-screen transition-colors duration-200 ${darkMode ? 'dark:bg-gray-900 dark:text-white' : 'bg-white'}`}
+    <div
+      dir="rtl"
+      className={`min-h-screen transition-colors duration-200 ${
+        darkMode ? 'dark:bg-gray-900 dark:text-white' : 'bg-white'
+      }`}
     >
       {/* Header */}
       <header className="fixed w-full top-0 z-50 bg-white dark:bg-gray-900 shadow-md">
@@ -207,11 +226,21 @@ function App() {
 
           {isMenuOpen && (
             <div className="md:hidden mt-4 space-y-4">
-              <a href="#home" className="block py-2 hover:text-blue-600 dark:hover:text-blue-400">בית</a>
-              <a href="#about" className="block py-2 hover:text-blue-600 dark:hover:text-blue-400">עליי</a>
-              <a href="#skills" className="block py-2 hover:text-blue-600 dark:hover:text-blue-400">יכולות</a>
-              <a href="#projects" className="block py-2 hover:text-blue-600 dark:hover:text-blue-400">פרוייקטים</a>
-              <a href="#contact" className="block py-2 hover:text-blue-600 dark:hover:text-blue-400">צור קשר</a>
+              <a href="#home" className="block py-2 hover:text-blue-600 dark:hover:text-blue-400">
+                בית
+              </a>
+              <a href="#about" className="block py-2 hover:text-blue-600 dark:hover:text-blue-400">
+                עליי
+              </a>
+              <a href="#skills" className="block py-2 hover:text-blue-600 dark:hover:text-blue-400">
+                יכולות
+              </a>
+              <a href="#projects" className="block py-2 hover:text-blue-600 dark:hover:text-blue-400">
+                פרוייקטים
+              </a>
+              <a href="#contact" className="block py-2 hover:text-blue-600 dark:hover:text-blue-400">
+                צור קשר
+              </a>
             </div>
           )}
         </nav>
@@ -240,10 +269,20 @@ function App() {
                     צרו איתי קשר !
                   </a>
                   <div className="flex gap-4">
-                    <a href="https://www.linkedin.com/in/eyal-yehiely-a074412b4/" target="_blank" rel="noopener noreferrer" className="p-2 hover:text-blue-600 dark:hover:text-blue-400">
+                    <a
+                      href="https://www.linkedin.com/in/eyal-yehiely-a074412b4/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-2 hover:text-blue-600 dark:hover:text-blue-400"
+                    >
                       <Linkedin className="w-6 h-6" />
                     </a>
-                    <a href="https://github.com/eyalyehiely/" target="_blank" rel="noopener noreferrer" className="p-2 hover:text-blue-600 dark:hover:text-blue-400">
+                    <a
+                      href="https://github.com/eyalyehiely/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-2 hover:text-blue-600 dark:hover:text-blue-400"
+                    >
                       <Facebook className="w-6 h-6" />
                     </a>
                   </div>
@@ -271,9 +310,7 @@ function App() {
                 מתמחה בעריכת סרטוני תדמית לבתי עסק ופרטיים, סרטוני קידום מכירות, סרטוני Infographics,
                 עריכת וידאו ומצגות לאירועים ועיצוב גרפי.
                 <br />
-                <h3 className="font-bold">
-                  ומה הסיפור שלכם ?
-                </h3>
+                <strong>ומה הסיפור שלכם ?</strong>
               </p>
             </div>
           </div>
@@ -300,36 +337,72 @@ function App() {
         </section>
 
         {/* Projects Section */}
-        {/* Projects Section */}
         <section id="projects" className="py-20 bg-white dark:bg-gray-900">
           <div className="container mx-auto px-6">
             <h2 className="text-3xl font-bold text-center mb-12">הפרוייקטים שלי</h2>
             <div className="grid md:grid-cols-2 gap-8">
-              {currentProjects.map((project) => (
-                <button
-                  key={project.title}
-                  onClick={() => setSelectedVideo(project.videoUrl)}
-                  className="group"
-                >
-                  <div className="bg-gray-50 dark:bg-gray-800 rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow">
-                    <div className="h-48 overflow-hidden">
-                      {/* YouTube Thumbnail */}
-                      <img
-                        src={`https://img.youtube.com/vi/${new URL(project.videoUrl).searchParams.get("v")}/hqdefault.jpg`}
-                        alt={project.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      />
-                    </div>
-                    <div className="p-6">
-                      <h3 className="text-xl font-semibold mb-2">{project.title}</h3>
-                      <p className="text-gray-600 dark:text-gray-300">
-                        {project.description}
-                      </p>
-                    </div>
+              {currentProjects.map((project) => {
+                const isSelected = selectedVideo === project.videoUrl;
+                return (
+                  <div
+                    key={project.title}
+                    className="relative bg-gray-50 dark:bg-gray-800 rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow"
+                  >
+                    {/* If NOT selected => show thumbnail, else => show video */}
+                    {!isSelected ? (
+                      <button
+                        onClick={() => setSelectedVideo(project.videoUrl)}
+                        className="group w-full text-left"
+                      >
+                        {/* 
+                          Container with custom background color (change as you like). 
+                          You can do: bg-blue-200, bg-black, or even a bg-[url('...')] 
+                          with a custom image. 
+                        */}
+                        <div className="relative bg-blue-200 h-48">
+                          <img
+                            src={`https://img.youtube.com/vi/${
+                              new URL(project.videoUrl).searchParams.get("v")
+                            }/hqdefault.jpg`}
+                            alt={project.title}
+                            className="absolute top-0 left-0 w-full h-full object-cover 
+                                       group-hover:scale-105 transition-transform duration-300 
+                                       opacity-90"
+                          />
+                        </div>
+                        <div className="p-6">
+                          <h3 className="text-xl font-semibold mb-2">{project.title}</h3>
+                          <p className="text-gray-600 dark:text-gray-300">
+                            {project.description}
+                          </p>
+                        </div>
+                      </button>
+                    ) : (
+                      <div className="relative">
+                        <div className="relative pt-[56.25%]">
+                          <ReactPlayer
+                            url={project.videoUrl}
+                            controls
+                            playing
+                            width="100%"
+                            height="100%"
+                            style={{ position: 'absolute', top: 0, left: 0 }}
+                          />
+                        </div>
+                        {/* X button to close video and revert to thumbnail */}
+                        <button
+                          onClick={() => setSelectedVideo(null)}
+                          className="absolute top-2 left-2 z-10 p-2 bg-black bg-opacity-50 text-white rounded-full hover:bg-opacity-70"
+                        >
+                          <X size={24} />
+                        </button>
+                      </div>
+                    )}
                   </div>
-                </button>
-              ))}
+                );
+              })}
             </div>
+
             {/* Pagination Controls */}
             <div className="flex justify-center mt-8 gap-4">
               <button
@@ -342,7 +415,6 @@ function App() {
               <span className="flex items-center">
                 דף {currentPage} מתוך {totalPages}
               </span>
-
               <button
                 onClick={() => handlePageChange(currentPage - 1)}
                 disabled={currentPage === 1}
@@ -362,10 +434,11 @@ function App() {
               <form onSubmit={handleSubmit} className="space-y-6">
                 {status.message && (
                   <div
-                    className={`p-4 rounded-lg ${status.type === 'success'
-                      ? 'bg-green-100 text-green-800'
-                      : 'bg-red-100 text-red-800'
-                      } flex items-center gap-2`}
+                    className={`p-4 rounded-lg ${
+                      status.type === 'success'
+                        ? 'bg-green-100 text-green-800'
+                        : 'bg-red-100 text-red-800'
+                    } flex items-center gap-2`}
                   >
                     {status.type === 'success' ? (
                       <CheckCircle className="w-5 h-5" />
@@ -416,6 +489,7 @@ function App() {
                   {isSubmitting ? 'שולח...' : 'שלח הודעה'}
                 </button>
               </form>
+
               <div className="mt-12 text-center">
                 <h3 className="text-xl font-semibold mb-4">קבעו איתי פגישה</h3>
                 <a
@@ -431,14 +505,6 @@ function App() {
           </div>
         </section>
       </main>
-
-      {/* Floating Video Player */}
-      {selectedVideo && (
-        <VideoPlayer
-          videoUrl={selectedVideo}
-          onClose={() => setSelectedVideo(null)}
-        />
-      )}
 
       {/* Footer */}
       <footer className="bg-white dark:bg-gray-900 py-8">

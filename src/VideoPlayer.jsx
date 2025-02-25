@@ -18,7 +18,8 @@ function VideoPlayer({ videoUrl, onClose }) {
         width="100%"
         height="100%"
         controls
-        playing
+        light={true}             // use YouTube thumbnail
+        playIcon={<button>▶️</button>} // optional custom play button
       />
     </div>
   );
