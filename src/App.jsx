@@ -26,9 +26,9 @@ import submitForm from './functions/submitForm';
 function App() {
   const [darkMode, setDarkMode] = useState(true);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [selectedVideo, setSelectedVideo] = useState(null); // which video is playing (inline)
+  const [selectedVideo, setSelectedVideo] = useState(null); // inline video
 
-  // Apply dark mode classes
+  // Dark mode handling
   useEffect(() => {
     if (darkMode) {
       document.documentElement.classList.add('dark');
@@ -97,29 +97,29 @@ function App() {
       videoUrl: "https://youtu.be/MvBL6hb-la0?si=dpSq9UOyYtec2AKk"
     },
     {
-      title:"המפקדת",
-      description:"תיקון צבע",
+      title: "המפקדת",
+      description: "תיקון צבע",
       videoUrl: "https://youtu.be/7_RikziXxeM?si=J54I9n5_B-_K--SA",
     },
     {
       title: "Crop Showreel",
-      description:"",
+      description: "",
       videoUrl: "https://youtu.be/tQCOBKm2Wqg?si=btKOrlDyBErvyLhB",
     },
     {
       title: "Nevvon",
-      description:"",
+      description: "",
       videoUrl: "https://youtu.be/wvL2oj-k6uw?si=FihYyamzGuuCTgO0",
     },
     {
       title: "App Commercial",
-      description:"",
+      description: "",
       videoUrl: "https://youtu.be/eGMcEymauW8?si=aDrh6cZvjQe-2QSp",
     },
   ];
 
   // Pagination
-  const itemsPerPage = 4;
+  const itemsPerPage = 2;
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = Math.ceil(projects.length / itemsPerPage);
 
@@ -130,11 +130,10 @@ function App() {
   const handlePageChange = (newPage) => {
     if (newPage < 1 || newPage > totalPages) return;
     setCurrentPage(newPage);
-    // Optionally reset selectedVideo when changing pages
-    setSelectedVideo(null);
+    setSelectedVideo(null); // reset video when changing pages
   };
 
-  // Contact form states
+  // Contact form state
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -182,22 +181,30 @@ function App() {
     await submitForm(formData, setStatus, setFormData, setIsSubmitting);
   };
 
-
-
   return (
     <div
       dir="rtl"
-      className={`min-h-screen transition-colors duration-200 ${
-        darkMode ? 'dark:bg-gray-900 dark:text-white' : 'bg-white'
-      }`}
+      className={`min-h-screen transition-colors duration-200 ${darkMode ? 'dark:bg-gray-900 dark:text-white' : 'bg-white'
+        }`}
     >
       {/* Header */}
       <header className="fixed w-full top-0 z-50 bg-white dark:bg-gray-900 shadow-md">
         <nav className="container mx-auto px-6 py-4">
           <div className="flex justify-between items-center">
-            <a href="#home" className="text-2xl font-bold dark:text-white">
-              תום כהן
-            </a>
+            {/* Logo + Name */}
+            <div className="flex items-center gap-2">
+              {/* Replace src with your actual logo file/path */}
+              <a href="#home" className="flex items-center gap-2">
+                <img
+                  src="/images/logo.jpeg"
+                  alt="My Logo"
+                  className="h-10 w-auto object-contain"
+                />
+                <span className="text-2xl font-bold dark:text-white">
+                  תום כהן
+                </span>
+              </a>
+            </div>
 
             <div className="flex items-center gap-4">
               <button
@@ -224,23 +231,14 @@ function App() {
             </div>
           </div>
 
+          {/* Mobile Menu */}
           {isMenuOpen && (
             <div className="md:hidden mt-4 space-y-4">
-              <a href="#home" className="block py-2 hover:text-blue-600 dark:hover:text-blue-400">
-                בית
-              </a>
-              <a href="#about" className="block py-2 hover:text-blue-600 dark:hover:text-blue-400">
-                עליי
-              </a>
-              <a href="#skills" className="block py-2 hover:text-blue-600 dark:hover:text-blue-400">
-                יכולות
-              </a>
-              <a href="#projects" className="block py-2 hover:text-blue-600 dark:hover:text-blue-400">
-                פרוייקטים
-              </a>
-              <a href="#contact" className="block py-2 hover:text-blue-600 dark:hover:text-blue-400">
-                צור קשר
-              </a>
+              <a href="#home" className="block py-2 hover:text-blue-600 dark:hover:text-blue-400">בית</a>
+              <a href="#about" className="block py-2 hover:text-blue-600 dark:hover:text-blue-400">עליי</a>
+              <a href="#skills" className="block py-2 hover:text-blue-600 dark:hover:text-blue-400">יכולות</a>
+              <a href="#projects" className="block py-2 hover:text-blue-600 dark:hover:text-blue-400">פרוייקטים</a>
+              <a href="#contact" className="block py-2 hover:text-blue-600 dark:hover:text-blue-400">צור קשר</a>
             </div>
           )}
         </nav>
@@ -348,22 +346,21 @@ function App() {
                     key={project.title}
                     className="relative bg-gray-50 dark:bg-gray-800 rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow"
                   >
-                    {/* If NOT selected => show thumbnail, else => show video */}
+                    {/* If NOT selected => show thumbnail; if selected => show video */}
                     {!isSelected ? (
                       <button
                         onClick={() => setSelectedVideo(project.videoUrl)}
                         className="group w-full text-left"
                       >
                         {/* 
-                          Container with custom background color (change as you like). 
-                          You can do: bg-blue-200, bg-black, or even a bg-[url('...')] 
-                          with a custom image. 
+                          Container with custom background color (change to your preference).
+                          If you'd like a custom image or gradient, you can do:
+                          className="relative bg-[url('/path/to/bg.jpg')] bg-cover bg-center h-48"
                         */}
                         <div className="relative bg-blue-200 h-48">
                           <img
-                            src={`https://img.youtube.com/vi/${
-                              new URL(project.videoUrl).searchParams.get("v")
-                            }/hqdefault.jpg`}
+                            src={`https://img.youtube.com/vi/${new URL(project.videoUrl).searchParams.get("v")
+                              }/hqdefault.jpg`}
                             alt={project.title}
                             className="absolute top-0 left-0 w-full h-full object-cover 
                                        group-hover:scale-105 transition-transform duration-300 
@@ -372,9 +369,7 @@ function App() {
                         </div>
                         <div className="p-6">
                           <h3 className="text-xl font-semibold mb-2">{project.title}</h3>
-                          <p className="text-gray-600 dark:text-gray-300">
-                            {project.description}
-                          </p>
+                          <p className="text-gray-600 dark:text-gray-300">{project.description}</p>
                         </div>
                       </button>
                     ) : (
@@ -389,7 +384,7 @@ function App() {
                             style={{ position: 'absolute', top: 0, left: 0 }}
                           />
                         </div>
-                        {/* X button to close video and revert to thumbnail */}
+                        {/* Close (X) button to revert to thumbnail */}
                         <button
                           onClick={() => setSelectedVideo(null)}
                           className="absolute top-2 left-2 z-10 p-2 bg-black bg-opacity-50 text-white rounded-full hover:bg-opacity-70"
@@ -434,11 +429,10 @@ function App() {
               <form onSubmit={handleSubmit} className="space-y-6">
                 {status.message && (
                   <div
-                    className={`p-4 rounded-lg ${
-                      status.type === 'success'
+                    className={`p-4 rounded-lg ${status.type === 'success'
                         ? 'bg-green-100 text-green-800'
                         : 'bg-red-100 text-red-800'
-                    } flex items-center gap-2`}
+                      } flex items-center gap-2`}
                   >
                     {status.type === 'success' ? (
                       <CheckCircle className="w-5 h-5" />
