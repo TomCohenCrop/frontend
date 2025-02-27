@@ -4,8 +4,6 @@ import {
   X,
   Moon,
   Sun,
-  Linkedin,
-  Facebook,
   Phone,
   CheckCircle,
   AlertCircle
@@ -99,7 +97,7 @@ function App() {
     {
       title: "המפקדת",
       description: "תיקון צבע",
-      videoUrl: "https://youtu.be/7_RikziXxeM?si=J54I9n5_B-_K--SA",
+      videoUrl: "https://youtu.be/7_RikziXxeM?si=ixlvXuTb1-8H-WKz",
     },
     {
       title: "Crop Showreel",
@@ -119,7 +117,7 @@ function App() {
   ];
 
   // Pagination
-  const itemsPerPage = 2;
+  const itemsPerPage = 4;
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = Math.ceil(projects.length / itemsPerPage);
 
@@ -195,11 +193,11 @@ function App() {
             <div className="flex items-center gap-2">
               {/* Replace src with your actual logo file/path */}
               <a href="#home" className="flex items-center gap-2">
-                <img
+                <img 
                   src="/images/logo.jpeg"
                   alt="My Logo"
-                  className="h-10 w-auto object-contain"
-                />
+                  className="h-12 w-12 rounded-full border-2 border-blue-600 dark:border-blue-400 object-cover"
+                  />
                 <span className="text-2xl font-bold dark:text-white">
                   תום כהן
                 </span>
@@ -266,24 +264,6 @@ function App() {
                   >
                     צרו איתי קשר !
                   </a>
-                  <div className="flex gap-4">
-                    <a
-                      href="https://www.linkedin.com/in/eyal-yehiely-a074412b4/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="p-2 hover:text-blue-600 dark:hover:text-blue-400"
-                    >
-                      <Linkedin className="w-6 h-6" />
-                    </a>
-                    <a
-                      href="https://github.com/eyalyehiely/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="p-2 hover:text-blue-600 dark:hover:text-blue-400"
-                    >
-                      <Facebook className="w-6 h-6" />
-                    </a>
-                  </div>
                 </div>
               </div>
               <div className="relative">
@@ -483,18 +463,6 @@ function App() {
                   {isSubmitting ? 'שולח...' : 'שלח הודעה'}
                 </button>
               </form>
-
-              <div className="mt-12 text-center">
-                <h3 className="text-xl font-semibold mb-4">קבעו איתי פגישה</h3>
-                <a
-                  href="https://calendly.com/eyalwork0/30min"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-block px-8 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
-                >
-                  לחצו כאן !
-                </a>
-              </div>
             </div>
           </div>
         </section>
@@ -506,22 +474,7 @@ function App() {
           <div className="text-center">
             <h2 className="text-2xl font-bold mb-4">תום כהן</h2>
             <div className="flex justify-center gap-6">
-              <a
-                href="https://www.linkedin.com/in/eyal-yehiely-a074412b4/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-blue-600 dark:hover:text-blue-400"
-              >
-                <Linkedin className="w-6 h-6" />
-              </a>
-              <a
-                href="https://github.com/eyalyehiely/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-blue-600 dark:hover:text-blue-400"
-              >
-                <Facebook className="w-6 h-6" />
-              </a>
+              
               <a
                 href="tel:+972504083588"
                 className="hover:text-blue-600 dark:hover:text-blue-400"
