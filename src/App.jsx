@@ -12,12 +12,13 @@ import ReactPlayer from "react-player";
 import { SiAdobephotoshop } from "react-icons/si";
 import {
   SiFigma,
-  SiAdobe,
+  SiAdobepremierepro,
   SiAdobeillustrator,
   SiDavinciresolve,
   SiCinema4D,
   SiAdobeaftereffects,
 } from "react-icons/si";
+import TypewriterText from "./components/TypewriterText";
 
 import submitForm from "./functions/submitForm";
 
@@ -45,7 +46,9 @@ function App() {
     },
     {
       name: "Premiere",
-      icon: <SiAdobe className="text-4xl text-blue-600 dark:text-blue-400" />,
+      icon: (
+        <SiAdobepremierepro className="text-4xl text-blue-600 dark:text-blue-400" />
+      ),
     },
     {
       name: "Photoshop",
@@ -189,6 +192,15 @@ function App() {
     await submitForm(formData, setStatus, setFormData, setIsSubmitting);
   };
 
+  // Add this array somewhere in your App component
+  const animatedTexts = [
+    "עריכת סרטוני תדמית לבתי עסק",
+    "עיצוב גרפי מקצועי",
+    "עריכת וידאו ואנימציה",
+    "אפטר אפקטס ופרימייר",
+    "סרטוני קידום ברשתות חברתיות",
+  ];
+
   return (
     <div
       dir="rtl"
@@ -325,11 +337,19 @@ function App() {
                   היי, אני{" "}
                   <span className="text-blue-600 dark:text-blue-400">תום</span>
                   <br />
-                  עורך וידאו
+                  <div className="h-14 flex items-center">
+                    <TypewriterText
+                      textArray={animatedTexts}
+                      typingSpeed={70}
+                      deletingSpeed={35}
+                      delayBetween={1800}
+                      cursorStyle="default"
+                      className="text-5xl"
+                    />
+                  </div>
                 </h1>
                 <p className="text-xl text-gray-600 dark:text-gray-300">
-                  Passionate about creating beautiful and functional web
-                  applications
+                  מעצב ועורך וידאו מקצועי
                 </p>
                 <div className="flex gap-4">
                   <a
@@ -600,7 +620,7 @@ function App() {
               </a>
             </div>
             <div className="mt-4 text-sm text-gray-600 dark:text-gray-400">
-            Developed by {" "} 
+              Developed by{" "}
               <a
                 href="https://eyalyehiely.up.railway.app/"
                 target="_blank"
