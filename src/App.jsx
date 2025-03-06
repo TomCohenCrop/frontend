@@ -599,6 +599,17 @@ function App() {
                 <Phone className="w-6 h-6" />
               </a>
             </div>
+            <div className="mt-4 text-sm text-gray-600 dark:text-gray-400">
+            Developed by {" "} 
+              <a
+                href="https://eyalyehiely.up.railway.app/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+              >
+                Eyal Yehiely
+              </a>
+            </div>
           </div>
         </div>
       </footer>
