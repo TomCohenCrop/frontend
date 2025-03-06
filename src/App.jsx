@@ -348,9 +348,7 @@ function App() {
                     />
                   </div>
                 </h1>
-                <p className="text-xl text-gray-600 dark:text-gray-300">
-                  מעצב ועורך וידאו מקצועי
-                </p>
+
                 <div className="flex gap-4">
                   <a
                     href="#contact"
