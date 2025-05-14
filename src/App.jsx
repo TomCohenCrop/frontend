@@ -1,31 +1,15 @@
 import { useState, useEffect } from "react";
-import {
-  Menu,
-  X,
-  Moon,
-  Sun,
-  Phone,
-  CheckCircle,
-  AlertCircle,
-} from "lucide-react";
-import ReactPlayer from "react-player";
-import { SiAdobephotoshop } from "react-icons/si";
-import {
-  SiFigma,
-  SiAdobepremierepro,
-  SiAdobeillustrator,
-  SiDavinciresolve,
-  SiCinema4D,
-  SiAdobeaftereffects,
-} from "react-icons/si";
-import TypewriterText from "./components/TypewriterText";
-
-import submitForm from "./functions/submitForm";
-
+import { Menu, X, Moon, Sun } from "lucide-react";
+import ContactUs from "./components/ContactUs";
+import Footer from "./components/Footer";
+import Projects from "./components/Projects";
+import Skills from "./components/Skills";
+import Hero from "./components/Hero";
+import About from "./components/About";
+import MessageMe from "./components/MessageMe";
 function App() {
   const [darkMode, setDarkMode] = useState(true);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [selectedVideo, setSelectedVideo] = useState(null); // inline video
 
   // Dark mode handling
   useEffect(() => {
@@ -36,170 +20,8 @@ function App() {
     }
   }, [darkMode]);
 
-  // Skills data
-  const skills = [
-    {
-      name: "After effects",
-      icon: (
-        <SiAdobeaftereffects className="text-4xl text-blue-600 dark:text-blue-400" />
-      ),
-    },
-    {
-      name: "Premiere",
-      icon: (
-        <SiAdobepremierepro className="text-4xl text-blue-600 dark:text-blue-400" />
-      ),
-    },
-    {
-      name: "Photoshop",
-      icon: (
-        <SiAdobephotoshop className="text-4xl text-blue-600 dark:text-blue-400" />
-      ),
-    },
-    {
-      name: "Illustrator",
-      icon: (
-        <SiAdobeillustrator className="text-4xl text-blue-600 dark:text-blue-400" />
-      ),
-    },
-    {
-      name: "DaVinci Resolve",
-      icon: (
-        <SiDavinciresolve className="text-4xl text-blue-600 dark:text-blue-400" />
-      ),
-    },
-    {
-      name: "Figma",
-      icon: <SiFigma className="text-4xl text-blue-600 dark:text-blue-400" />,
-    },
-    {
-      name: "Cinema 4D",
-      icon: (
-        <SiCinema4D className="text-4xl text-blue-600 dark:text-blue-400" />
-      ),
-    },
-  ];
 
-  // Projects data
-  const projects = [
-    {
-      title: "כאן 11",
-      description: "לילה כיום יאיר",
-      videoUrl: "https://youtu.be/VYox99w7LVM?si=rHi1RFCZesuldy9h",
-    },
-    {
-      title: "Westarp israel done",
-      description: "Another cool project",
-      videoUrl: "https://youtu.be/ph214eLBvUQ?si=yB8z9Hn-TrAriUbR",
-    },
-    {
-      title: "Keepy",
-      description: "Another cool project",
-      videoUrl: "https://youtu.be/BrqreihGFRo?si=xkvJ0yYL-KtW0Q_I",
-    },
-    {
-      title: "Crop logo",
-      description: "Another cool project",
-      videoUrl: "https://youtu.be/gRW0k7iu-FU?si=szbD9qiIzOLvbLC9",
-    },
-    {
-      title: "Lynxight",
-      description: "Another cool project",
-      videoUrl: "https://youtu.be/MvBL6hb-la0?si=dpSq9UOyYtec2AKk",
-    },
-    {
-      title: "המפקדת",
-      description: "תיקון צבע",
-      videoUrl: "https://youtu.be/7_RikziXxeM?si=ixlvXuTb1-8H-WKz",
-    },
-    {
-      title: "Crop Showreel",
-      description: "",
-      videoUrl: "https://youtu.be/tQCOBKm2Wqg?si=btKOrlDyBErvyLhB",
-    },
-    {
-      title: "Nevvon",
-      description: "",
-      videoUrl: "https://youtu.be/wvL2oj-k6uw?si=FihYyamzGuuCTgO0",
-    },
-    {
-      title: "App Commercial",
-      description: "",
-      videoUrl: "https://youtu.be/eGMcEymauW8?si=aDrh6cZvjQe-2QSp",
-    },
-  ];
-
-  // Pagination
-  const itemsPerPage = 4;
-  const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = Math.ceil(projects.length / itemsPerPage);
-
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentProjects = projects.slice(indexOfFirstItem, indexOfLastItem);
-
-  const handlePageChange = (newPage) => {
-    if (newPage < 1 || newPage > totalPages) return;
-    setCurrentPage(newPage);
-    setSelectedVideo(null); // reset video when changing pages
-  };
-
-  // Contact form state
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    message: "",
-  });
-  const [status, setStatus] = useState({ type: "", message: "" });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    setStatus({ type: "", message: "" });
-
-    // Basic validation
-    const errors = {};
-
-    if (!formData.name.trim()) {
-      errors.name = "Name is required";
-    }
-    if (!formData.email.trim()) {
-      errors.email = "Email is required";
-    } else if (
-      !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(formData.email)
-    ) {
-      errors.email = "Invalid email address";
-    }
-    if (!formData.message.trim()) {
-      errors.message = "Message is required";
-    }
-
-    if (Object.keys(errors).length > 0) {
-      setStatus({ type: "error", message: "Please fix the errors" });
-      setIsSubmitting(false);
-      return;
-    }
-
-    await submitForm(formData, setStatus, setFormData, setIsSubmitting);
-  };
-
-  // Add this array somewhere in your App component
-  const animatedTexts = [
-    "עריכת סרטוני תדמית לבתי עסק",
-    "עיצוב גרפי מקצועי",
-    "עריכת וידאו ואנימציה",
-    "אפטר אפקטס ופרימייר",
-    "סרטוני קידום ברשתות חברתיות",
-  ];
+ 
 
   return (
     <div
@@ -214,7 +36,6 @@ function App() {
           <div className="flex justify-between items-center">
             {/* Logo + Name */}
             <div className="flex items-center gap-2">
-              {/* Replace src with your actual logo file/path */}
               <a href="#home" className="flex items-center gap-2">
                 <img
                   src="/images/logo.jpeg"
@@ -326,313 +147,24 @@ function App() {
       {/* Main Content */}
       <main className="pt-20">
         {/* Hero Section */}
-        <section
-          id="home"
-          className="min-h-screen flex items-center bg-gray-50 dark:bg-gray-800"
-        >
-          <div className="container mx-auto px-6 py-20">
-            <div className="grid md:grid-cols-2 gap-12 items-center">
-              <div className="space-y-8">
-                <h1 className="text-5xl font-bold leading-tight">
-                  היי, אני{" "}
-                  <span className="text-blue-600 dark:text-blue-400">תום</span>
-                  <br />
-                  <div className="h-14 flex items-center">
-                    <TypewriterText
-                      textArray={animatedTexts}
-                      typingSpeed={70}
-                      deletingSpeed={35}
-                      delayBetween={1800}
-                      cursorStyle="default"
-                      className="text-5xl"
-                    />
-                  </div>
-                </h1>
-
-                <div className="flex gap-4">
-                  <a
-                    href="#contact"
-                    className="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                  >
-                    צרו איתי קשר !
-                  </a>
-                </div>
-              </div>
-              <div className="relative">
-                <div className="w-80 h-80 mx-auto overflow-hidden rounded-full border-4 border-blue-600 dark:border-blue-400">
-                  <img
-                    src="/images/Tom.jpeg"
-                    alt="Profile"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+        <Hero />
 
         {/* About Section */}
-        <section id="about" className="py-20 bg-white dark:bg-gray-900">
-          <div className="container mx-auto px-6">
-            <h2 className="text-3xl font-bold text-center mb-12">קצת עליי</h2>
-            <div className="max-w-3xl mx-auto text-lg text-gray-600 dark:text-gray-300">
-              <p>
-                היי, שמי תום כהן.
-                <br />
-                אפטריסט, עורך וידאו, אנימטור, קולוריסט ומעצב גרפי. בוגר בתי הספר
-                Blink למקצועות הפוסט פרודקשן, מכללת מנטור וסטודיו 6B. מתמחה
-                בעריכת סרטוני תדמית לבתי עסק ופרטיים, סרטוני קידום מכירות,
-                סרטוני Infographics, עריכת וידאו ומצגות לאירועים ועיצוב גרפי.
-                <br />
-                <strong>ומה הסיפור שלכם ?</strong>
-              </p>
-            </div>
-          </div>
-        </section>
+        <About />
 
-        {/* Skills Section */}
-        <section id="skills" className="py-12">
-          <div className="container mx-auto px-6">
-            <h2 className="text-3xl font-bold text-center mb-8">היכולות שלי</h2>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
-              {skills.map((skill) => (
-                <div
-                  key={skill.name}
-                  className="flex flex-col items-center p-6 bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-lg transition-transform transform hover:-translate-y-1 hover:scale-105 text-center"
-                >
-                  {skill.icon}
-                  <h3 className="mt-4 text-xl font-semibold text-gray-800 dark:text-gray-100">
-                    {skill.name}
-                  </h3>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
+        {/* skills Section */}
+        <Skills />
 
         {/* Projects Section */}
-        <section id="projects" className="py-20 bg-white dark:bg-gray-900">
-          <div className="container mx-auto px-6">
-            <h2 className="text-3xl font-bold text-center mb-12">
-              הפרוייקטים שלי
-            </h2>
-            <div className="grid md:grid-cols-2 gap-8">
-              {currentProjects.map((project) => {
-                const isSelected = selectedVideo === project.videoUrl;
-                return (
-                  <div
-                    key={project.title}
-                    className="relative bg-gray-50 dark:bg-gray-800 rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow"
-                  >
-                    {/* If NOT selected => show logo with play button; if selected => show video */}
-                    {!isSelected ? (
-                      <button
-                        onClick={() => setSelectedVideo(project.videoUrl)}
-                        className="group w-full text-left"
-                      >
-                        {/* Logo background with play button */}
-                        <div className="relative aspect-video overflow-hidden bg-gradient-to-r from-blue-400/10 to-blue-600/10">
-                          {/* Logo as background */}
-                          <div
-                            className="absolute inset-0 flex items-center justify-center"
-                            style={{
-                              backgroundImage: `url('/images/logo.jpeg')`,
-                              backgroundSize: "cover",
-                              backgroundPosition: "center",
-                              backgroundRepeat: "no-repeat",
-                              filter: "opacity(0.9)",
-                            }}
-                          />
-
-                          {/* Semi-transparent dark overlay */}
-                          <div className="absolute inset-0 bg-black opacity-30 group-hover:opacity-20 transition-opacity duration-300"></div>
-
-                          {/* Project title overlay */}
-                          <div className="absolute top-4 right-4 bg-blue-600 bg-opacity-90 px-3 py-1 rounded-lg">
-                            <h3 className="text-white font-semibold">
-                              {project.title}
-                            </h3>
-                          </div>
-
-                          {/* Play button overlay */}
-                          <div className="absolute inset-0 flex items-center justify-center z-10">
-                            <div
-                              className="w-24 h-24 bg-white bg-opacity-90 rounded-full 
-                                          flex items-center justify-center shadow-lg
-                                          transform group-hover:scale-110 transition-all duration-300
-                                          border-2 border-blue-500"
-                            >
-                              <svg
-                                className="w-12 h-12 text-blue-600 transform translate-x-1"
-                                fill="currentColor"
-                                viewBox="0 0 24 24"
-                              >
-                                <path d="M8 5v14l11-7z" />
-                              </svg>
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Project info */}
-                        <div className="p-6">
-                          <h3 className="text-xl font-semibold mb-2">
-                            {project.title}
-                          </h3>
-                          <p className="text-gray-600 dark:text-gray-300">
-                            {project.description}
-                          </p>
-                        </div>
-                      </button>
-                    ) : (
-                      <div className="relative">
-                        <div className="relative aspect-video">
-                          <ReactPlayer
-                            url={project.videoUrl}
-                            controls
-                            playing
-                            width="100%"
-                            height="100%"
-                            style={{ position: "absolute", top: 0, left: 0 }}
-                          />
-                        </div>
-                        {/* Close (X) button to revert to thumbnail */}
-                        <button
-                          onClick={() => setSelectedVideo(null)}
-                          className="absolute top-3 left-3 z-10 p-2 bg-black bg-opacity-70 text-white rounded-full 
-                                    hover:bg-opacity-90 transition-all duration-200
-                                    flex items-center justify-center shadow-md"
-                        >
-                          <X size={24} />
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* Pagination Controls */}
-            <div className="flex justify-center mt-8 gap-4">
-              <button
-                onClick={() => handlePageChange(currentPage + 1)}
-                disabled={currentPage === totalPages}
-                className="px-4 py-2 bg-blue-600 text-white rounded disabled:opacity-50"
-              >
-                הבא
-              </button>
-              <span className="flex items-center">
-                דף {currentPage} מתוך {totalPages}
-              </span>
-              <button
-                onClick={() => handlePageChange(currentPage - 1)}
-                disabled={currentPage === 1}
-                className="px-4 py-2 bg-blue-600 text-white rounded disabled:opacity-50"
-              >
-                הקודם
-              </button>
-            </div>
-          </div>
-        </section>
+        <Projects />
 
         {/* Contact Section */}
-        <section id="contact" className="py-20 bg-gray-50 dark:bg-gray-800">
-          <div className="container mx-auto px-6">
-            <h2 className="text-3xl font-bold text-center mb-12">
-              צרו איתי קשר !
-            </h2>
-            <div className="max-w-2xl mx-auto">
-              <form onSubmit={handleSubmit} className="space-y-6">
-                {status.message && (
-                  <div
-                    className={`p-4 rounded-lg ${
-                      status.type === "success"
-                        ? "bg-green-100 text-green-800"
-                        : "bg-red-100 text-red-800"
-                    } flex items-center gap-2`}
-                  >
-                    {status.type === "success" ? (
-                      <CheckCircle className="w-5 h-5" />
-                    ) : (
-                      <AlertCircle className="w-5 h-5" />
-                    )}
-                    {status.message}
-                  </div>
-                )}
-                <div>
-                  <input
-                    type="text"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    placeholder="השם שלך"
-                    className="w-full px-4 py-3 rounded-lg border dark:bg-gray-700 dark:border-gray-600"
-                    required
-                  />
-                </div>
-                <div>
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    placeholder="דואר אלקטורני"
-                    className="w-full px-4 py-3 rounded-lg border dark:bg-gray-700 dark:border-gray-600"
-                    required
-                  />
-                </div>
-                <div>
-                  <textarea
-                    name="message"
-                    value={formData.message}
-                    onChange={handleChange}
-                    placeholder="ההודעה שלך"
-                    rows={5}
-                    className="w-full px-4 py-3 rounded-lg border dark:bg-gray-700 dark:border-gray-600"
-                    required
-                  ></textarea>
-                </div>
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="w-full px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {isSubmitting ? "שולח..." : "שלח הודעה"}
-                </button>
-              </form>
-            </div>
-          </div>
-        </section>
+        <ContactUs />
       </main>
-
-      {/* Footer */}
-      <footer className="bg-white dark:bg-gray-900 py-8">
-        <div className="container mx-auto px-6">
-          <div className="text-center">
-            <h2 className="text-2xl font-bold mb-4">תום כהן</h2>
-            <div className="flex justify-center gap-6">
-              <a
-                href="tel:+972504083588"
-                className="hover:text-blue-600 dark:hover:text-blue-400"
-              >
-                <Phone className="w-6 h-6" />
-              </a>
-            </div>
-            <div className="mt-4 text-sm text-gray-600 dark:text-gray-400">
-              Developed by{" "}
-              <a
-                href="https://eyalyehiely.up.railway.app/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-              >
-                Eyal Yehiely
-              </a>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <Footer />
+      <MessageMe />
     </div>
   );
 }
-
 export default App;
+

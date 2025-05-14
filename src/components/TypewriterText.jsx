@@ -1,86 +1,188 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import PropTypes from "prop-types";
 
-const TypewriterText = ({ 
-  textArray, 
-  typingSpeed = 80, 
-  deletingSpeed = 40, 
+const TypewriterText = ({
+  textArray,
+  typingSpeed = 80,
+  deletingSpeed = 40,
   delayBetween = 2000,
   cursorStyle = "default", // "default", "block", "underscore", "none"
-  className = ""
+  className = "",
+  naturalTyping = true,
+  loop = true,
+  startDelay = 0,
 }) => {
-  const [currentText, setCurrentText] = useState('');
+  const [currentText, setCurrentText] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [phase, setPhase] = useState('typing'); // typing, pausing, deleting
+  const [phase, setPhase] = useState("waiting"); // waiting, typing, pausing, deleting
   const [cursorVisible, setCursorVisible] = useState(true);
+  const timeoutRef = useRef(null);
+  const startTimeRef = useRef(Date.now());
 
-  // Blink cursor separately from typing animation for smoother experience
+  // Enhanced cursor blinking
   useEffect(() => {
     const blinkInterval = setInterval(() => {
-      setCursorVisible(prev => !prev);
+      setCursorVisible((prev) => !prev);
     }, 530);
     return () => clearInterval(blinkInterval);
   }, []);
+
+  // Calculate variable typing speed for natural effect
+  const getTypingDelay = useCallback(
+    (char, index, text) => {
+      if (!naturalTyping) return typingSpeed;
+
+      let delay = typingSpeed;
+
+      // Longer pauses after punctuation
+      const prevChar = text[index - 1];
+      if (prevChar && /[.!?]/.test(prevChar)) {
+        delay += 200;
+      } else if (prevChar && /[,;:]/.test(prevChar)) {
+        delay += 100;
+      }
+
+      // Slight speed variations for realism
+      const variation = Math.random() * 0.4 + 0.8; // 0.8x to 1.2x speed
+      delay *= variation;
+
+      // Occasional longer pauses (simulating thinking)
+      if (Math.random() < 0.1) {
+        delay += Math.random() * 150;
+      }
+
+      return Math.max(delay, 20); // Minimum 20ms
+    },
+    [naturalTyping, typingSpeed]
+  );
+
+  const getDeletingDelay = useCallback(() => {
+    if (!naturalTyping) return deletingSpeed;
+    const variation = Math.random() * 0.3 + 0.85;
+    return deletingSpeed * variation;
+  }, [naturalTyping, deletingSpeed]);
 
   useEffect(() => {
     if (!textArray || textArray.length === 0) return;
 
     const targetText = textArray[currentIndex];
-    let timeout;
+
+    // Handle initial start delay
+    if (phase === "waiting" && Date.now() - startTimeRef.current < startDelay) {
+      timeoutRef.current = setTimeout(() => {
+        setPhase("typing");
+      }, startDelay - (Date.now() - startTimeRef.current));
+      return () => clearTimeout(timeoutRef.current);
+    }
+
+    if (phase === "waiting") {
+      setPhase("typing");
+      return;
+    }
 
     // Typing phase
-    if (phase === 'typing') {
+    if (phase === "typing") {
       if (currentText.length < targetText.length) {
-        // Still typing
-        timeout = setTimeout(() => {
+        const nextChar = targetText[currentText.length];
+        const delay = getTypingDelay(nextChar, currentText.length, targetText);
+
+        timeoutRef.current = setTimeout(() => {
           setCurrentText(targetText.substring(0, currentText.length + 1));
-        }, typingSpeed);
+        }, delay);
       } else {
-        // Done typing, start pause
-        setPhase('pausing');
+        // Finished typing current text
+        if (!loop && currentIndex === textArray.length - 1) {
+          // Don't continue if loop is false and we're on the last text
+          return;
+        }
+        setPhase("pausing");
       }
-    } 
+    }
     // Pausing phase
-    else if (phase === 'pausing') {
-      timeout = setTimeout(() => {
-        setPhase('deleting');
+    else if (phase === "pausing") {
+      timeoutRef.current = setTimeout(() => {
+        setPhase("deleting");
       }, delayBetween);
-    } 
+    }
     // Deleting phase
-    else if (phase === 'deleting') {
+    else if (phase === "deleting") {
       if (currentText.length > 0) {
-        // Still deleting
-        timeout = setTimeout(() => {
+        const delay = getDeletingDelay();
+        timeoutRef.current = setTimeout(() => {
           setCurrentText(currentText.substring(0, currentText.length - 1));
-        }, deletingSpeed);
+        }, delay);
       } else {
-        // Done deleting, move to next text and start typing
-        setCurrentIndex((currentIndex + 1) % textArray.length);
-        setPhase('typing');
+        // Finished deleting, move to next text
+        const nextIndex = (currentIndex + 1) % textArray.length;
+        setCurrentIndex(nextIndex);
+        setPhase("typing");
+
+        // If not looping and we've completed all texts, stop
+        if (!loop && nextIndex === 0) {
+          setPhase("pausing");
+          return;
+        }
       }
     }
 
-    return () => clearTimeout(timeout);
-  }, [currentText, currentIndex, phase, textArray, typingSpeed, deletingSpeed, delayBetween]);
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, [
+    currentText,
+    currentIndex,
+    phase,
+    textArray,
+    delayBetween,
+    getTypingDelay,
+    getDeletingDelay,
+    loop,
+    startDelay,
+  ]);
 
-  // Different cursor styles
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
+
+  // Enhanced cursor rendering with smoother animations
   const renderCursor = () => {
     if (cursorStyle === "none") return null;
-    
-    const cursorClass = cursorVisible ? "opacity-100" : "opacity-0";
-    
-    if (cursorStyle === "underscore") {
-      return <span className={`ml-1 h-1 w-5 bg-blue-600 dark:bg-blue-400 ${cursorClass} transition-opacity duration-200`}></span>;
-    } else if (cursorStyle === "block") {
-      return <span className={`ml-1 h-[1.2em] w-3 bg-blue-600 dark:bg-blue-400 ${cursorClass} transition-opacity duration-200`}></span>;
-    } else { // default
-      return <span className={`ml-1 h-[1.2em] w-[3px] bg-blue-600 dark:bg-blue-400 ${cursorClass} transition-opacity duration-200`}></span>;
+
+    const baseClasses = "inline-block transition-all duration-100";
+    const visibilityClasses = cursorVisible ? "opacity-100" : "opacity-0";
+
+    switch (cursorStyle) {
+      case "underscore":
+        return (
+          <span
+            className={`${baseClasses} ${visibilityClasses} ml-1 h-0.5 w-3 bg-blue-600 dark:bg-blue-400 translate-y-3`}
+          />
+        );
+      case "block":
+        return (
+          <span
+            className={`${baseClasses} ${visibilityClasses} ml-1 h-6 w-3 bg-blue-600 dark:bg-blue-400 bg-opacity-70`}
+          />
+        );
+      default: // "default" - vertical line
+        return (
+          <span
+            className={`${baseClasses} ${visibilityClasses} ml-1 h-6 w-0.5 bg-blue-600 dark:bg-blue-400`}
+          />
+        );
     }
   };
 
   return (
-    <div className={`inline-flex items-center ${className}`}>
-      <span className="text-blue-600 dark:text-blue-400">
+    <div className={`inline-flex items-baseline ${className}`}>
+      <span className="text-blue-600 dark:text-blue-400 font-mono">
         {currentText}
       </span>
       {renderCursor()}
@@ -94,7 +196,10 @@ TypewriterText.propTypes = {
   deletingSpeed: PropTypes.number,
   delayBetween: PropTypes.number,
   cursorStyle: PropTypes.oneOf(["default", "block", "underscore", "none"]),
-  className: PropTypes.string
+  className: PropTypes.string,
+  naturalTyping: PropTypes.bool,
+  loop: PropTypes.bool,
+  startDelay: PropTypes.number,
 };
 
-export default TypewriterText; 
+export default TypewriterText;
